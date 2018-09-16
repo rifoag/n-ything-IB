@@ -16,14 +16,14 @@ def createPion(dataPion,pions):
   amount = int(dataPion[2])
   listPoint = []
 
-  x = random.randrange(9)
-  y = random.randrange(9)
+  x = random.randrange(8)
+  y = random.randrange(8)
   listPoint.append((x,y))
 
   for i in range(0,amount):
     while( (x,y) in listPoint):
-      x = random.randrange(9)
-      y = random.randrange(9)
+      x = random.randrange(8)
+      y = random.randrange(8)
     listPoint.append((x,y))
     pions.append({'Type' : dataPion[1], 'color' : dataPion[0], 'row': x, 'col' : y})
 
