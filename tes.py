@@ -22,7 +22,12 @@ def printAllPion(pions):
         print("Color: ", pion['color'])
         print("PositionX: ", pion['row'])
         print("PositionY: ", pion['col'], "\n")
-
+def printBoard():
+    for i in range(0,8):
+        for j in range(0,8):
+            print(".",end="")
+        print("\n")
 pions = []
 readFile('input.txt',pions)
 printAllPion(pions)
+printBoard()
