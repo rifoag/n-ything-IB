@@ -42,6 +42,18 @@ def printBoard():
         print("-",end="")
     print("\n")
 
+# Check if a pion can attack/can be attacked
+def checkAttack(currPion,adjPion):
+    currX = currPion["row"] # X coordinate current Pion
+    currY = currPion["col"] # Y coordinate current Pion
+    adjX = adjPion["row"]
+    adjY = adjPion["col"]
+
+    if (currPion['Type'] == "QUEEN"):
+    if (currPion['Type'] == "KNIGHT"):
+    if (currPion['Type'] == "BISHOP"):
+    if (currPion['Type'] == "ROOK"):
+
 pions = []
 readFile('input.txt',pions)
 printAllPion(pions)
