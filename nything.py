@@ -6,23 +6,23 @@ def readFile(fileName, pions):
   data = file.read()
   data = data.split('\n') # List of entire data
   dataSplited = []
+  listPoint = []
   for row in data:
     dataSplited.append(row.split(' ')) # Parse input (per row) into a temporary array
   for row in dataSplited:
-    createPion(row,pions) # Parse into desired format
+    createPion(row,pions,listPoint) # Parse into desired format
 
 # Create pions' data to dictionary
-def createPion(dataPion,pions):
+def createPion(dataPion,pions,listPoint):
   amount = int(dataPion[2])
-  listPoint = []
 
-  x = random.randrange(4)
-  y = random.randrange(4)
+  x = random.randrange(8)
+  y = random.randrange(8)
 
   for i in range(0,amount):
     while((x,y) in listPoint):
-      x = random.randrange(4)
-      y = random.randrange(4)
+      x = random.randrange(8)
+      y = random.randrange(8)
     listPoint.append((x,y))
     pions.append({'Type' : dataPion[1], 'color' : dataPion[0], 'row': x, 'col' : y})
 
