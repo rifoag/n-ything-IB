@@ -141,70 +141,17 @@ def notOccupied(pawns, x, y):
       return False
   return True
 
-# return all position that may be reached by the current pawn, given the current state
-def eligibleMoves(pawns, pawn):
-  pos = [] # all point that can be reached by the pawn
-  x = pawn['row']
-  y = pawn['col']
-
-  if (pawn['type'] == 'ROOK' or pawn['type'] == 'QUEEN'):
-    for i in range(8):
-      if notOccupied(pawns, x, i):
-        pos.append({'row': x , 'col': i})
-      if notOccupied(pawns, i, y):
-        pos.append({'row': i , 'col': y})
-  elif (pawn['type'] == 'BISHOP' or pawn['type'] == 'QUEEN'):
-      # quad 1
-      h = 1 # horizontal movement
-      v = 1 # vertical movement
-      while (x + h < 8 and y + v < 8):
-        if notOccupied(pawns, x + h, y + v):
-          pos.append({'row': x+h , 'col': y+v})
-          h += 1
-          v += 1
-      # quad 2
-      h = -1
-      v = 1
-      while (x + h >= 0 and y + v < 8):
-        if notOccupied(pawns, x + h, y + v):
-          pos.append({'row': x+h , 'col': y+v})
-          h -= 1
-          v += 1
-      # quad 3 
-      h = -1
-      v = -1
-      while (x + h >= 0 and y + v >= 0):
-        if notOccupied(pawns, x + h, y + v):
-          pos.append({'row': x+h , 'col': y+v})
-          h -= 1
-          v -= 1
-      # quad 4
-      h = 1
-      v = -1
-      while (x + h < 8 and y + v >= 0):
-        if notOccupied(pawns, x + h, y + v):
-          pos.append({'row': x+h , 'col': y+v})
-          h += 1
-          v -= 1
-  elif (pawn['type'] == 'KNIGHT'):
-    for i in range(8): # check all 8 possible moves of a knight 
-      h = [1,1,2,2,-1,-1,-2,-2]
-      v = [2,-2,1,-1,2,-2,1,-1]
-      for i in range(8):
-        if ((x + h[i] >= 0 and x + h[i] < 8 and y + v[i] >= 0 and y + v[i] < 8) and (notOccupied(pawns, x + h[i], y + v[i]))):
-          pos.append({'row': x+h[i] , 'col': y+v[i]})
-  return pos
-
 # return all neighbour from a given state
 def listAllNeighbour(pawns):
   stateList = []
   for idx, val in enumerate(pawns):
-    positions = eligibleMoves(pawns, val) # get all position that may be reached by the current pawn
-    for pos in positions:
-      neighbourState = copy.deepcopy(pawns)
-      neighbourState[idx]['row'] = pos['row']
-      neighbourState[idx]['col'] = pos['col']
-      stateList.append(neighbourState)
+    for x in range(8):
+      for y in range(8):
+        if notOccupied(pawns, x, y):
+          neighbourState = copy.deepcopy(pawns)
+          neighbourState[idx]['row'] = x
+          neighbourState[idx]['col'] = y
+          stateList.append(neighbourState)            
   return stateList
 
 pawns = []
@@ -212,3 +159,4 @@ readFile('input.txt',pawns)
 printAllPawns(pawns)
 printBoard(pawns)
 print(evaluate(pawns))
+allNeighbour = listAllNeighbour(pawns)
