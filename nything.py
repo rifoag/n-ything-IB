@@ -1,5 +1,6 @@
 import random
 import copy
+from math import exp
 
 # Read pawns data from file external
 def readFile(fileName, pawns, numberOfPawns):
@@ -12,6 +13,30 @@ def readFile(fileName, pawns, numberOfPawns):
     dataSplited.append(row.split(' ')) # Parse input (per row) into a temporary array
   for row in dataSplited:
     createPawn(row, pawns, listPoint, numberOfPawns) # Parse into desired format
+
+# Menu
+def menuInit(pawns):
+  fileName = input('Enter file name : ')
+  readFile(fileName, pawns)
+  print("Pawns Data : ")
+  printAllPawns(pawns)
+  print("Board First Condition : ")
+  printBoard(pawns)
+  print("Choose Algorithm By Input The Number :")
+  print("1. Hill Climbing")
+  print("2. Simulted Annealing")
+  print("3. Genetic Algorithm")
+  chosenAlgo = int(input("Choose : "))
+  while (chosenAlgo > 3 or chosenAlgo < 1):
+    print("Chose The Correct Number Please...")
+    chosenAlgo = int(input("Choose : "))
+  if (chosenAlgo == 1):
+    printBoard(hillClimbing(pawns))
+    print(evaluate(hillClimbing(pawns)))
+  elif (chosenAlgo == 2):
+    print("Simulted Annealing Should Run Here!")
+  elif (chosenAlgo == 3):
+    print("Genetic Algorithm Should Run Here!")
 
 # Create pawns' data to dictionary
 def createPawn(datapawn, pawns, listPoint, numberOfPawns):
@@ -183,6 +208,35 @@ def hillClimbing(initState, numberOfPawns):
         evalCurrent = evaluate(neighbour, numberOfPawns)
   return current
 
+def decision(probability):
+  return random.randrange(100) < probability
+
+# Simulated Annealing function, temperature decreasing by ratio
+def simulatedAnnealing(initState,temperature,decreaseRate,iteration):
+  current = initState
+  evalCurrent = evaluate(current)
+  i = 0
+  isOver = False
+  while (evalCurrent != 0 and i < iteration and not isOver):
+    isOver = True
+    AllNeighbour = listAllNeighbour(current)
+    for neighbour in AllNeighbour:
+      if (evalCurrent > evaluate(neighbour)):
+        current = neighbour
+        evalCurrent = evaluate(current)
+        i+=1
+        temperature *= decreaseRate/100
+        isOver = False
+      else:
+        probability = exp(evaluate(neighbour)-evalCurrent/temperature)
+        if (decision(probability)):
+          current = neighbour
+          evalCurrent = evaluate(current)
+          i+=1
+          temperature *= decreaseRate/100
+          isOver = False
+  return current
+
 pawns = []
 numberOfPawns = {}
 numberOfPawns['WHITE'] = 0
@@ -195,3 +249,9 @@ allNeighbour = listAllNeighbour(pawns)
 result = hillClimbing(pawns, numberOfPawns)
 printBoard(result)
 print(evaluate(result, numberOfPawns))
+printBoard(hillClimbing(pawns))
+print(evaluate(hillClimbing(pawns)))
+# hasil = simulatedAnnealing(pawns,100,80,1000)
+# printBoard(hasil)
+# print(evaluate(hasil))
+
