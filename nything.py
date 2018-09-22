@@ -2,7 +2,7 @@ import random
 import copy
 
 # Read pawns data from file external
-def readFile(fileName, pawns):
+def readFile(fileName, pawns, numberOfPawns):
   file = open(fileName, 'r')
   data = file.read()
   data = data.split('\n') # List of entire data
@@ -11,12 +11,11 @@ def readFile(fileName, pawns):
   for row in data:
     dataSplited.append(row.split(' ')) # Parse input (per row) into a temporary array
   for row in dataSplited:
-    createPawn(row,pawns,listPoint) # Parse into desired format
+    createPawn(row, pawns, listPoint, numberOfPawns) # Parse into desired format
 
 # Create pawns' data to dictionary
-def createPawn(datapawn,pawns,listPoint):
+def createPawn(datapawn, pawns, listPoint, numberOfPawns):
   amount = int(datapawn[2])
-
   x = random.randrange(8)
   y = random.randrange(8)
 
@@ -26,6 +25,7 @@ def createPawn(datapawn,pawns,listPoint):
       y = random.randrange(8)
     listPoint.append((x,y))
     pawns.append({'type' : datapawn[1], 'color' : datapawn[0], 'row': x, 'col' : y})
+    numberOfPawns[datapawn[0]] += 1
 
 # Print all pawns data (type, Color, Position)
 def printAllPawns(pawns):
@@ -43,7 +43,7 @@ def printBoard(pawns):
       for pawn in pawns:
         if (pawn['row']==i and pawn['col']==j):
           isPawnExist = True
-          if (pawn['color'] == 'WHITE'):
+          if (pawn['color'] == 'BLACK'):
             if (pawn['type']=='QUEEN'):
               print('Q',end="")
             elif (pawn['type']=='BISHOP'):
@@ -125,14 +125,28 @@ def canAttackDiagonally(currPawn, dirPawn, pawns):
   else:
     return False
 
+# Check if two chess piece is an enemy
+def isEnemy(pawn, dirPawn):
+  if (pawn['color'] != dirPawn['color']):
+    return True
+  else:
+    return False
+
 # Count how many chess piece that can attack another piece
-def evaluate(pawns):
-  sumAtk=0
+def evaluate(pawns, numberOfPawns):
+  canAttackEnemy = 0
+  canAttackFriend = 0
   for pawn in pawns:
-    for dir in pawns:
-      if checkAttack(pawn,dir, pawns) and pawn!=dir:
-        sumAtk+=1
-  return sumAtk
+    for dirPawn in pawns:
+      if checkAttack(pawn, dirPawn, pawns) and pawn!=dirPawn:
+        if (isEnemy(pawn, dirPawn)):
+          canAttackEnemy += 1
+        else: # the other piece is not an enemy
+          canAttackFriend += 1
+  if(numberOfPawns['BLACK'] == 0 or numberOfPawns['WHITE'] == 0):
+    return canAttackFriend
+  else:
+    return canAttackFriend + (2*numberOfPawns['BLACK']*numberOfPawns['WHITE'] - canAttackEnemy)
 
 # check if a cell is not occupied by a pawn
 def notOccupied(pawns, x, y):
@@ -155,25 +169,29 @@ def listAllNeighbour(pawns):
   return stateList
 
 # hill climbing function without color constraint
-def hillClimbing(initState):
+def hillClimbing(initState, numberOfPawns):
   current = initState
-  evalCurrent = evaluate(current)
+  evalCurrent = evaluate(current, numberOfPawns)
   isLocalMinim = False
   while (evalCurrent != 0 and not isLocalMinim):
     isLocalMinim = True
     AllNeighbour = listAllNeighbour(current)
     for neighbour in AllNeighbour:
-      if (evalCurrent > evaluate(neighbour)):
+      if (evalCurrent > evaluate(neighbour, numberOfPawns)):
         isLocalMinim = False
         current = neighbour
-        evalCurrent = evaluate(current)
+        evalCurrent = evaluate(neighbour, numberOfPawns)
   return current
 
 pawns = []
-readFile('input.txt',pawns)
+numberOfPawns = {}
+numberOfPawns['WHITE'] = 0
+numberOfPawns['BLACK'] = 0
+readFile('input.txt',pawns, numberOfPawns)
 printAllPawns(pawns)
 printBoard(pawns)
-print(evaluate(pawns))
+print(evaluate(pawns, numberOfPawns))
 allNeighbour = listAllNeighbour(pawns)
-printBoard(hillClimbing(pawns))
-print(evaluate(hillClimbing(pawns)))
+result = hillClimbing(pawns, numberOfPawns)
+printBoard(result)
+print(evaluate(result, numberOfPawns))
