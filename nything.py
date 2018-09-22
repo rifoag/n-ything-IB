@@ -42,14 +42,24 @@ def printBoard(pawns):
       for pawn in pawns:
         if (pawn['row']==i and pawn['col']==j):
           isPawnExist = True
-          if (pawn['Type']=='QUEEN'):
-            print('Q',end="")
-          elif (pawn['Type']=='BISHOP'):
-            print('B',end="")
-          elif (pawn['Type']=='ROOK'):
-            print('R',end="")
-          elif (pawn['Type']=='KNIGHT'):
-            print('K',end="")
+          if (pawn['color'] == 'WHITE'):
+            if (pawn['Type']=='QUEEN'):
+              print('Q',end="")
+            elif (pawn['Type']=='BISHOP'):
+              print('B',end="")
+            elif (pawn['Type']=='ROOK'):
+              print('R',end="")
+            elif (pawn['Type']=='KNIGHT'):
+              print('K',end="")
+          else:
+            if (pawn['Type']=='QUEEN'):
+              print('q',end="")
+            elif (pawn['Type']=='BISHOP'):
+              print('b',end="")
+            elif (pawn['Type']=='ROOK'):
+              print('r',end="")
+            elif (pawn['Type']=='KNIGHT'):
+              print('k',end="")
       if (not isPawnExist):
         print("-",end="")
     print("\n")
