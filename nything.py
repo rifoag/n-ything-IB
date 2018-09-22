@@ -13,6 +13,30 @@ def readFile(fileName, pawns):
   for row in dataSplited:
     createPawn(row,pawns,listPoint) # Parse into desired format
 
+# Menu
+def menuInit(pawns):
+  fileName = input('Enter file name : ')
+  readFile(fileName, pawns)
+  print("Pawns Data : ")
+  printAllPawns(pawns)
+  print("Board First Condition : ")
+  printBoard(pawns)
+  print("Choose Algorithm By Input The Number :")
+  print("1. Hill Climbing")
+  print("2. Simulted Annealing")
+  print("3. Genetic Algorithm")
+  chosenAlgo = int(input("Choose : "))
+  while (chosenAlgo > 3 or chosenAlgo < 1):
+    print("Chose The Correct Number Please...")
+    chosenAlgo = int(input("Choose : "))
+  if (chosenAlgo == 1):
+    printBoard(hillClimbing(pawns))
+    print(evaluate(hillClimbing(pawns)))
+  elif (chosenAlgo == 2):
+    print("Simulted Annealing Should Run Here!")
+  elif (chosenAlgo == 3):
+    print("Genetic Algorithm Should Run Here!")
+
 # Create pawns' data to dictionary
 def createPawn(datapawn,pawns,listPoint):
   amount = int(datapawn[2])
@@ -170,10 +194,11 @@ def hillClimbing(initState):
   return current
 
 pawns = []
-readFile('input.txt',pawns)
-printAllPawns(pawns)
-printBoard(pawns)
-print(evaluate(pawns))
-allNeighbour = listAllNeighbour(pawns)
-printBoard(hillClimbing(pawns))
-print(evaluate(hillClimbing(pawns)))
+# readFile('input.txt',pawns)
+menuInit(pawns)
+# printAllPawns(pawns)
+# printBoard(pawns)
+# print(evaluate(pawns))
+# allNeighbour = listAllNeighbour(pawns)
+# printBoard(hillClimbing(pawns))
+# print(evaluate(hillClimbing(pawns)))
