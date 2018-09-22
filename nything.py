@@ -15,9 +15,9 @@ def readFile(fileName, pawns, numberOfPawns):
     createPawn(row, pawns, listPoint, numberOfPawns) # Parse into desired format
 
 # Menu
-def menuInit(pawns):
+def menuInit(pawns, numberOfPawns):
   fileName = input('Enter file name : ')
-  readFile(fileName, pawns)
+  readFile(fileName, pawns, numberOfPawns)
   print("Pawns Data : ")
   printAllPawns(pawns)
   print("Board First Condition : ")
@@ -31,12 +31,16 @@ def menuInit(pawns):
     print("Chose The Correct Number Please...")
     chosenAlgo = int(input("Choose : "))
   if (chosenAlgo == 1):
-    printBoard(hillClimbing(pawns))
-    print(evaluate(hillClimbing(pawns)))
+    hasil = hillClimbing(pawns,numberOfPawns)
   elif (chosenAlgo == 2):
-    print("Simulted Annealing Should Run Here!")
+    temperature = int(input('Temperature: '))
+    decreaseRate = int(input('Decrease Rate: '))
+    iteration = int(input('Maximum Iteration: '))
+    hasil = simulatedAnnealing(pawns,numberOfPawns,temperature,decreaseRate,iteration)
   elif (chosenAlgo == 3):
     print("Genetic Algorithm Should Run Here!")
+  printBoard(hasil)
+  print(evaluate(hasil,numberOfPawns))
 
 # Create pawns' data to dictionary
 def createPawn(datapawn, pawns, listPoint, numberOfPawns):
@@ -212,26 +216,26 @@ def decision(probability):
   return random.randrange(100) < probability
 
 # Simulated Annealing function, temperature decreasing by ratio
-def simulatedAnnealing(initState,temperature,decreaseRate,iteration):
+def simulatedAnnealing(initState,numberOfPawns,temperature,decreaseRate,iteration):
   current = initState
-  evalCurrent = evaluate(current)
+  evalCurrent = evaluate(current,numberOfPawns)
   i = 0
   isOver = False
   while (evalCurrent != 0 and i < iteration and not isOver):
     isOver = True
     AllNeighbour = listAllNeighbour(current)
     for neighbour in AllNeighbour:
-      if (evalCurrent > evaluate(neighbour)):
+      if (evalCurrent > evaluate(neighbour,numberOfPawns)):
         current = neighbour
-        evalCurrent = evaluate(current)
+        evalCurrent = evaluate(current,numberOfPawns)
         i+=1
         temperature *= decreaseRate/100
         isOver = False
       else:
-        probability = exp(evaluate(neighbour)-evalCurrent/temperature)
+        probability = exp(evaluate(neighbour,numberOfPawns)-evalCurrent/temperature)
         if (decision(probability)):
           current = neighbour
-          evalCurrent = evaluate(current)
+          evalCurrent = evaluate(current,numberOfPawns)
           i+=1
           temperature *= decreaseRate/100
           isOver = False
@@ -241,14 +245,15 @@ pawns = []
 numberOfPawns = {}
 numberOfPawns['WHITE'] = 0
 numberOfPawns['BLACK'] = 0
-readFile('input.txt',pawns, numberOfPawns)
-printAllPawns(pawns)
-printBoard(pawns)
-print(evaluate(pawns, numberOfPawns))
-allNeighbour = listAllNeighbour(pawns)
-result = hillClimbing(pawns, numberOfPawns)
-printBoard(result)
-print(evaluate(result, numberOfPawns))
+# readFile('input.txt',pawns, numberOfPawns)
+# printAllPawns(pawns)
+# printBoard(pawns)
+menuInit(pawns,numberOfPawns)
+# print(evaluate(pawns, numberOfPawns))
+# allNeighbour = listAllNeighbour(pawns)
+# result = hillClimbing(pawns, numberOfPawns)
+# printBoard(result)
+# print(evaluate(result, numberOfPawns))
 # hasil = simulatedAnnealing(pawns,100,80,1000)
 # printBoard(hasil)
 # print(evaluate(hasil))
