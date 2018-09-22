@@ -154,9 +154,26 @@ def listAllNeighbour(pawns):
           stateList.append(neighbourState)            
   return stateList
 
+# hill climbing function without color constraint
+def hillClimbing(initState):
+  current = initState
+  evalCurrent = evaluate(current)
+  isLocalMinim = False
+  while (evalCurrent != 0 and not isLocalMinim):
+    isLocalMinim = True
+    AllNeighbour = listAllNeighbour(current)
+    for neighbour in AllNeighbour:
+      if (evalCurrent > evaluate(neighbour)):
+        isLocalMinim = False
+        current = neighbour
+        evalCurrent = evaluate(current)
+  return current
+
 pawns = []
 readFile('input.txt',pawns)
 printAllPawns(pawns)
 printBoard(pawns)
 print(evaluate(pawns))
 allNeighbour = listAllNeighbour(pawns)
+printBoard(hillClimbing(pawns))
+print(evaluate(hillClimbing(pawns)))
