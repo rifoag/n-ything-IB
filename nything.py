@@ -229,10 +229,10 @@ def simulatedAnnealing(initState,numberOfPawns,temperature,decreaseRate,iteratio
         current = neighbour
         evalCurrent = evaluate(current,numberOfPawns)
         i+=1
-        temperature *= decreaseRate/100
+        temperature *= decreaseRate/100.00
         isOver = False
       else:
-        probability = exp(evaluate(neighbour,numberOfPawns)-evalCurrent/temperature)
+        probability = int(exp(evaluate(neighbour,numberOfPawns)-evalCurrent/temperature))
         if (decision(probability)):
           current = neighbour
           evalCurrent = evaluate(current,numberOfPawns)
@@ -240,6 +240,11 @@ def simulatedAnnealing(initState,numberOfPawns,temperature,decreaseRate,iteratio
           temperature *= decreaseRate/100
           isOver = False
   return current
+
+#Metode penyelesaian menggunakan genetic algorithm
+def geneticAlgoritm(initState):
+  #Kode menyusul
+  print('jck')
 
 pawns = []
 numberOfPawns = {}
@@ -257,4 +262,3 @@ menuInit(pawns,numberOfPawns)
 # hasil = simulatedAnnealing(pawns,100,80,1000)
 # printBoard(hasil)
 # print(evaluate(hasil))
-
