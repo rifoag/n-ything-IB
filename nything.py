@@ -39,6 +39,7 @@ def menuInit(pawns, numberOfPawns):
     hasil = simulatedAnnealing(pawns,numberOfPawns,temperature,decreaseRate,iteration)
   elif (chosenAlgo == 3):
     print("Genetic Algorithm Should Run Here!")
+    #geneticAlgoritm(hehehehehehehe)
   printBoard(hasil)
   print(evaluate(hasil,numberOfPawns))
 
@@ -241,11 +242,48 @@ def simulatedAnnealing(initState,numberOfPawns,temperature,decreaseRate,iteratio
           isOver = False
   return current
 
+"""
 #Metode penyelesaian menggunakan genetic algorithm
 def geneticAlgoritm(initState):
   #Kode menyusul
   print('jck')
 
+# crossover setengah dari anak
+def crossOver(state1, state2):
+  anakAnak = []
+  anak1 = []
+  anak2 = []
+  if (len(state1) % 2 == 0):
+    anak1.append(state1[0:(len(state1)/2)])
+    anak1.append(state2[(len(state1)/2 + 1):len(state2)])
+    anak2.append(state2[0:(len(state1)/2)])
+    anak2.append(state1[(len(state1)/2 + 1):len(state2)])
+  else:
+    anak1.append(state1[0:(len(state1)/2)+1])
+    anak1.append(state2[(len(state1)/2 + 2):len(state2)])
+    anak2.append(state2[0:(len(state1)/2)+1])
+    anak2.append(state1[(len(state1)/2 + 2):len(state2)])
+  anakAnak = [anak1, anak2]
+  return anakAnak
+
+# Mengganti posisi pion secara random ke posisi random
+def mutation(state):
+  i = random.randrange(0,len(state))
+  x = random.randrange(0,8)
+  y = random.randrange(0,8)
+  while not notOccupied(state,x,y):
+    x = random.randrange(0,8)
+    y = random.randrange(0,8)
+  state[i]['row'] = x
+  state[i]['col'] = y
+
+def fitness(listOfState, numberOfPawns):
+  sortedState = listOfState.sort(key = evaluate(,numberOfPawns)) # list of state, sorted by it's fitness rate
+  return sortedState
+
+      
+
+"""
 pawns = []
 numberOfPawns = {}
 numberOfPawns['WHITE'] = 0
