@@ -1,6 +1,7 @@
 import random
 import copy
 from math import exp
+from operator import itemgetter
 
 # Read pawns data from file external
 def readFile(fileName, pawns, numberOfPawns):
@@ -39,7 +40,6 @@ def menuInit(pawns, numberOfPawns):
     hasil = simulatedAnnealing(pawns,numberOfPawns,temperature,decreaseRate,iteration)
   elif (chosenAlgo == 3):
     print("Genetic Algorithm Should Run Here!")
-    #geneticAlgoritm(hehehehehehehe)
   printBoard(hasil)
   print(evaluate(hasil,numberOfPawns))
 
@@ -242,7 +242,7 @@ def simulatedAnnealing(initState,numberOfPawns,temperature,decreaseRate,iteratio
           isOver = False
   return current
 
-"""
+
 #Metode penyelesaian menggunakan genetic algorithm
 def geneticAlgoritm(initState):
   #Kode menyusul
@@ -277,21 +277,28 @@ def mutation(state):
   state[i]['row'] = x
   state[i]['col'] = y
 
+#Fitness Function
 def fitness(listOfState, numberOfPawns):
-  sortedState = listOfState.sort(key = evaluate(,numberOfPawns)) # list of state, sorted by it's fitness rate
-  return sortedState
+  hasil=[]
+  listConnected=[]
+  for idx,val in enumerate(listOfState):
+    listConnected.append((idx,evaluate(val,numberOfPawns)))
+  listConnected = sorted(listConnected,key=itemgetter(1))
+  for idx,val in listConnected:
+    hasil.append(listOfState[idx])
+  return hasil[:100]
 
-      
-
-"""
-pawns = []
+pawns_1 = []
+pawns_2 = []
 numberOfPawns = {}
 numberOfPawns['WHITE'] = 0
 numberOfPawns['BLACK'] = 0
-# readFile('input.txt',pawns, numberOfPawns)
+readFile('input.txt',pawns_1, numberOfPawns)
+readFile('input.txt',pawns_2, numberOfPawns)
+# fitness([pawns_1,pawns_2],numberOfPawns)
 # printAllPawns(pawns)
 # printBoard(pawns)
-menuInit(pawns,numberOfPawns)
+# menuInit(pawns,numberOfPawns)
 # print(evaluate(pawns, numberOfPawns))
 # allNeighbour = listAllNeighbour(pawns)
 # result = hillClimbing(pawns, numberOfPawns)
