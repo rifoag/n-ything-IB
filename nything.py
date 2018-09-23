@@ -4,21 +4,33 @@ from math import exp
 from operator import itemgetter
 
 # Read pawns data from file external
-def readFile(fileName, pawns, numberOfPawns):
+def readFile(fileName, dataSplitted):
   file = open(fileName, 'r')
   data = file.read()
   data = data.split('\n') # List of entire data
-  dataSplited = []
-  listPoint = []
   for row in data:
-    dataSplited.append(row.split(' ')) # Parse input (per row) into a temporary array
-  for row in dataSplited:
-    createPawn(row, pawns, listPoint, numberOfPawns) # Parse into desired format
+    dataSplitted.append(row.split(' ')) # Parse input (per row) into a temporary array
 
+# membuat state dari data
+def parsePawns(dataSplitted,numberOfPawns):
+  pawns=[]
+  listPoint=[]
+  for row in dataSplitted:
+    createPawn(row, pawns, listPoint, numberOfPawns) # Parse into desired format
+  return pawns
+
+# membuat list of state dari data
+def createListOfPawns(dataSplitted,numberOfPawns,JumlahPawns):
+  listofPawns=[]
+  for i in range(0,JumlahPawns):
+    listOfPawns.append(parsePawns(dataSplitted,numberOfPawns))
+  return listofPawns
 # Menu
 def menuInit(pawns, numberOfPawns):
   fileName = input('Enter file name : ')
-  readFile(fileName, pawns, numberOfPawns)
+  dataSplitted=[]
+  readFile(fileName, dataSplitted)
+  pawns=parsePawns(dataSplitted,numberOfPawns)
   print("Pawns Data : ")
   printAllPawns(pawns)
   print("Board First Condition : ")
@@ -244,10 +256,9 @@ def simulatedAnnealing(initState,numberOfPawns,temperature,decreaseRate,iteratio
 
 
 #Metode penyelesaian menggunakan genetic algorithm
-def geneticAlgoritm(initState):
-  #Kode menyusul
-  print('jck')
+# def geneticAlgoritm(populasi,numberOfPawns,limit):
 
+  
 # crossover setengah dari anak
 def crossOver(state1, state2):
   anakAnak = []
@@ -288,17 +299,14 @@ def fitness(listOfState, numberOfPawns):
     hasil.append(listOfState[idx])
   return hasil[:100]
 
-pawns_1 = []
-pawns_2 = []
+pawns=[]
 numberOfPawns = {}
 numberOfPawns['WHITE'] = 0
 numberOfPawns['BLACK'] = 0
-readFile('input.txt',pawns_1, numberOfPawns)
-readFile('input.txt',pawns_2, numberOfPawns)
 # fitness([pawns_1,pawns_2],numberOfPawns)
 # printAllPawns(pawns)
 # printBoard(pawns)
-# menuInit(pawns,numberOfPawns)
+menuInit(pawns,numberOfPawns)
 # print(evaluate(pawns, numberOfPawns))
 # allNeighbour = listAllNeighbour(pawns)
 # result = hillClimbing(pawns, numberOfPawns)
