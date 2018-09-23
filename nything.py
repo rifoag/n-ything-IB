@@ -21,10 +21,10 @@ def parsePawns(dataSplitted,numberOfPawns):
 
 # membuat list of state dari data
 def createListOfPawns(dataSplitted,numberOfPawns,JumlahPawns):
-  listofPawns=[]
+  listOfPawns=[]
   for i in range(0,JumlahPawns):
     listOfPawns.append(parsePawns(dataSplitted,numberOfPawns))
-  return listofPawns
+  return listOfPawns
 # Menu
 def menuInit(pawns, numberOfPawns):
   fileName = input('Enter file name : ')
