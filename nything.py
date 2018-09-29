@@ -271,14 +271,14 @@ def fitness(listOfState, numberOfPawns):
 def geneticAlgorithm(popSize,gen_amount,dataSplitted,numberOfPawns):
     Population = createListOfPawns(dataSplitted,numberOfPawns,popSize)
     if (popSize > 1):
-      for x in range(0,gen_amount):
-          Population = fitness(Population,numberOfPawns)
-          crossOver(popSize, Population)
-          print(Population)
+        for x in range(0,gen_amount):
+          #Population = fitness(Population,numberOfPawns)
+          #crossOver(popSize, Population)
+          mutation(Population,50)
           for y in Population:
-              print(y)
               if(evaluate(y,numberOfPawns)==0):
                   return y
+        return Population[0]
     else:
       return Population
 
@@ -292,6 +292,7 @@ def menuInit(pawns, numberOfPawns):
   printAllPawns(pawns)
   print("Board First Condition : ")
   printBoard(pawns)
+  print(evaluate(pawns, numberOfPawns))
   print("Choose Algorithm By Input The Number :")
   print("1. Hill Climbing")
   print("2. Simulted Annealing")
