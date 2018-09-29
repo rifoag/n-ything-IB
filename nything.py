@@ -227,12 +227,9 @@ def createListOfPawns(dataSplitted,numberOfPawns,JumlahPawns):
 
 # crossover setengah dari anak
 def crossOver(popSize, Population):
-    print(len(Population))
     for n in range(int(popSize/2)):
       anak1 = []
       anak2 = []
-      crossIteration = len(Population[0])/2
-      print(crossIteration)
       if (len(Population[0]) % 2 == 0):
           anak1.append(Population[n][0:int(len(Population[0])/2)])
           anak1.append(Population[n+1][int(len(Population[0]) / 2 + 1):len(Population[n])])
@@ -273,14 +270,17 @@ def fitness(listOfState, numberOfPawns):
 #Metode penyelesaian menggunakan genetic algorithm
 def geneticAlgorithm(popSize,gen_amount,dataSplitted,numberOfPawns):
     Population = createListOfPawns(dataSplitted,numberOfPawns,popSize)
-    print(Population)
-    for x in range(0,gen_amount):
-        Population = fitness(Population,numberOfPawns)
-        crossOver(popSize, Population)
-        mutation(Population,50)
-        for y in Population:
-            if(evaluate(y,numberOfPawns)==0):
-                return y
+    if (popSize > 1):
+      for x in range(0,gen_amount):
+          Population = fitness(Population,numberOfPawns)
+          crossOver(popSize, Population)
+          print(Population)
+          for y in Population:
+              print(y)
+              if(evaluate(y,numberOfPawns)==0):
+                  return y
+    else:
+      return Population
 
 # Menu
 def menuInit(pawns, numberOfPawns):
