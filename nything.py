@@ -271,7 +271,7 @@ def fitness(listOfState, numberOfPawns):
     return hasil[:100]
 
 #Metode penyelesaian menggunakan genetic algorithm
-def geneticAlgorithm(pop_size,gen_amount,dataSplitted,numberOfPawns):
+def geneticAlgorithm(popSize,gen_amount,dataSplitted,numberOfPawns):
     Population = createListOfPawns(dataSplitted,numberOfPawns,pop_size)
     print(Population)
     for x in range(0,gen_amount):
