@@ -226,23 +226,21 @@ def createListOfPawns(dataSplitted,numberOfPawns,JumlahPawns):
   return listOfPawns
 
 # crossover setengah dari anak
-def crossOver(state1, state2):
-    anakAnak = []
+def crossOver(Population):
     anak1 = []
     anak2 = []
-    if (len(state1) % 2 == 0):
-        anak1.append(state1[0:(len(state1) / 2)])
-        anak1.append(state2[(len(state1) / 2 + 1):len(state2)])
-        anak2.append(state2[0:(len(state1) / 2)])
-        anak2.append(state1[(len(state1) / 2 + 1):len(state2)])
+    if (len(Population[0]) % 2 == 0):
+        anak1.append(Population[0][0:(len(Population[0]) / 2)])
+        anak1.append(Population[1][(len(Population[0]) / 2 + 1):len(Population[1])])
+        anak2.append(Population[0][0:(len(Population[0]) / 2)])
+        anak2.append(Population[1][(len(Population[0]) / 2 + 1):len(Population[1])])
     else:
-        anak1.append(state1[0:(len(state1) / 2) + 1])
-        anak1.append(state2[(len(state1) / 2 + 2):len(state2)])
-        anak2.append(state2[0:(len(state1) / 2) + 1])
-        anak2.append(state1[(len(state1) / 2 + 2):len(state2)])
-    anakAnak = [anak1, anak2]
-    return anakAnak
-
+        anak1.append(Population[0][0:(len(Population[0]) / 2) + 1])
+        anak1.append(Population[1][(len(Population[0]) / 2 + 2):len(Population[1])])
+        anak2.append(Population[0][0:(len(Population[0]) / 2) + 1])
+        anak2.append(Population[1][(len(Population[0]) / 2 + 2):len(Population[1])])
+    Population[0] = anak1
+    Population[1] = anak2
 # Mengganti posisi pion secara random ke posisi random
 def mutation(state):
     i = random.randrange(0, len(state))
@@ -266,12 +264,12 @@ def fitness(listOfState, numberOfPawns):
     return hasil[:100]
 
 #Metode penyelesaian menggunakan genetic algorithm
-def geneticAlgorithm(pop_size,gen_amount,numberOfPawns):
+def geneticAlgorithm(pop_size,gen_amount,dataSplitted,numberOfPawns):
     Population = createListOfPawns(dataSplitted,numberOfPawns,pop_size)
     for x in range(0,gen_amount):
         #Population = fitness(Population,numberOfPawns)
-        Population = crossOver(Population)
-        Population = mutation(Population)
+        crossOver(Population)
+        mutation(Population)
         for x in Population:
             if(evaluate(x,numberOfPawns)==0):
                 return x
@@ -304,7 +302,7 @@ def menuInit(pawns, numberOfPawns):
   elif (chosenAlgo == 3):
     popSize = int(input('Population size: '))
     genAmount = int(input('For how many generations: '))
-    hasil = geneticAlgorithm(popSize,genAmount,numberOfPawns)
+    hasil = geneticAlgorithm(popSize,genAmount,dataSplitted,numberOfPawns)
     print("TEST")
   printBoard(hasil)
   print(evaluate(hasil,numberOfPawns))
