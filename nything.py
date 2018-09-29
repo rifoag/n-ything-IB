@@ -11,64 +11,6 @@ def readFile(fileName, dataSplitted):
   for row in data:
     dataSplitted.append(row.split(' ')) # Parse input (per row) into a temporary array
 
-# membuat state dari data
-def parsePawns(dataSplitted,numberOfPawns):
-  pawns=[]
-  listPoint=[]
-  for row in dataSplitted:
-    createPawn(row, pawns, listPoint, numberOfPawns) # Parse into desired format
-  return pawns
-
-# membuat list of state dari data
-def createListOfPawns(dataSplitted,numberOfPawns,JumlahPawns):
-  listOfPawns=[]
-  for i in range(0,JumlahPawns):
-    listOfPawns.append(parsePawns(dataSplitted,numberOfPawns))
-  return listOfPawns
-# Menu
-def menuInit(pawns, numberOfPawns):
-  fileName = input('Enter file name : ')
-  dataSplitted=[]
-  readFile(fileName, dataSplitted)
-  pawns=parsePawns(dataSplitted,numberOfPawns)
-  print("Pawns Data : ")
-  printAllPawns(pawns)
-  print("Board First Condition : ")
-  printBoard(pawns)
-  print("Choose Algorithm By Input The Number :")
-  print("1. Hill Climbing")
-  print("2. Simulted Annealing")
-  print("3. Genetic Algorithm")
-  chosenAlgo = int(input("Choose : "))
-  while (chosenAlgo > 3 or chosenAlgo < 1):
-    print("Chose The Correct Number Please...")
-    chosenAlgo = int(input("Choose : "))
-  if (chosenAlgo == 1):
-    hasil = hillClimbing(pawns,numberOfPawns)
-  elif (chosenAlgo == 2):
-    temperature = int(input('Temperature: '))
-    decreaseRate = int(input('Decrease Rate: '))
-    iteration = int(input('Maximum Iteration: '))
-    hasil = simulatedAnnealing(pawns,numberOfPawns,temperature,decreaseRate,iteration)
-  elif (chosenAlgo == 3):
-    print("Genetic Algorithm Should Run Here!")
-  printBoard(hasil)
-  print(evaluate(hasil,numberOfPawns))
-
-# Create pawns' data to dictionary
-def createPawn(datapawn, pawns, listPoint, numberOfPawns):
-  amount = int(datapawn[2])
-  x = random.randrange(8)
-  y = random.randrange(8)
-
-  for i in range(0,amount):
-    while((x,y) in listPoint):
-      x = random.randrange(8)
-      y = random.randrange(8)
-    listPoint.append((x,y))
-    pawns.append({'type' : datapawn[1], 'color' : datapawn[0], 'row': x, 'col' : y})
-    numberOfPawns[datapawn[0]] += 1
-
 # Print all pawns data (type, Color, Position)
 def printAllPawns(pawns):
   for pawn in pawns:
@@ -87,24 +29,24 @@ def printBoard(pawns):
           isPawnExist = True
           if (pawn['color'] == 'BLACK'):
             if (pawn['type']=='QUEEN'):
-              print('Q',end="")
+              print('Q     ',end="")
             elif (pawn['type']=='BISHOP'):
-              print('B',end="")
+              print('B     ',end="")
             elif (pawn['type']=='ROOK'):
-              print('R',end="")
+              print('R     ',end="")
             elif (pawn['type']=='KNIGHT'):
-              print('K',end="")
+              print('K     ',end="")
           else:
             if (pawn['type']=='QUEEN'):
-              print('q',end="")
+              print('q     ',end="")
             elif (pawn['type']=='BISHOP'):
-              print('b',end="")
+              print('b     ',end="")
             elif (pawn['type']=='ROOK'):
-              print('r',end="")
+              print('r     ',end="")
             elif (pawn['type']=='KNIGHT'):
-              print('k',end="")
+              print('k     ',end="")
       if (not isPawnExist):
-        print("-",end="")
+        print("-     ",end="")
     print("\n")
 
 # Check whether the current pawn can attack the other pawn
@@ -254,50 +196,118 @@ def simulatedAnnealing(initState,numberOfPawns,temperature,decreaseRate,iteratio
           isOver = False
   return current
 
+# membuat state dari data
+def parsePawns(dataSplitted,numberOfPawns):
+  pawns=[]
+  listPoint=[]
+  for row in dataSplitted:
+    createPawn(row, pawns, listPoint, numberOfPawns) # Parse into desired format
+  return pawns
 
-#Metode penyelesaian menggunakan genetic algorithm
-# def geneticAlgoritm(populasi,numberOfPawns,limit):
+# Create pawns' data to dictionary
+def createPawn(datapawn, pawns, listPoint, numberOfPawns):
+  amount = int(datapawn[2])
+  x = random.randrange(8)
+  y = random.randrange(8)
 
-  
+  for i in range(0,amount):
+    while((x,y) in listPoint):
+      x = random.randrange(8)
+      y = random.randrange(8)
+    listPoint.append((x,y))
+    pawns.append({'type' : datapawn[1], 'color' : datapawn[0], 'row': x, 'col' : y})
+    numberOfPawns[datapawn[0]] += 1
+
+# membuat list of state dari data
+def createListOfPawns(dataSplitted,numberOfPawns,JumlahPawns):
+  listOfPawns=[]
+  for i in range(0,JumlahPawns):
+    listOfPawns.append(parsePawns(dataSplitted,numberOfPawns))
+  return listOfPawns
+
 # crossover setengah dari anak
 def crossOver(state1, state2):
-  anakAnak = []
-  anak1 = []
-  anak2 = []
-  if (len(state1) % 2 == 0):
-    anak1.append(state1[0:(len(state1)/2)])
-    anak1.append(state2[(len(state1)/2 + 1):len(state2)])
-    anak2.append(state2[0:(len(state1)/2)])
-    anak2.append(state1[(len(state1)/2 + 1):len(state2)])
-  else:
-    anak1.append(state1[0:(len(state1)/2)+1])
-    anak1.append(state2[(len(state1)/2 + 2):len(state2)])
-    anak2.append(state2[0:(len(state1)/2)+1])
-    anak2.append(state1[(len(state1)/2 + 2):len(state2)])
-  anakAnak = [anak1, anak2]
-  return anakAnak
+    anakAnak = []
+    anak1 = []
+    anak2 = []
+    if (len(state1) % 2 == 0):
+        anak1.append(state1[0:(len(state1) / 2)])
+        anak1.append(state2[(len(state1) / 2 + 1):len(state2)])
+        anak2.append(state2[0:(len(state1) / 2)])
+        anak2.append(state1[(len(state1) / 2 + 1):len(state2)])
+    else:
+        anak1.append(state1[0:(len(state1) / 2) + 1])
+        anak1.append(state2[(len(state1) / 2 + 2):len(state2)])
+        anak2.append(state2[0:(len(state1) / 2) + 1])
+        anak2.append(state1[(len(state1) / 2 + 2):len(state2)])
+    anakAnak = [anak1, anak2]
+    return anakAnak
 
 # Mengganti posisi pion secara random ke posisi random
 def mutation(state):
-  i = random.randrange(0,len(state))
-  x = random.randrange(0,8)
-  y = random.randrange(0,8)
-  while not notOccupied(state,x,y):
-    x = random.randrange(0,8)
-    y = random.randrange(0,8)
-  state[i]['row'] = x
-  state[i]['col'] = y
+    i = random.randrange(0, len(state))
+    x = random.randrange(0, 8)
+    y = random.randrange(0, 8)
+    while not notOccupied(state, x, y):
+        x = random.randrange(0, 8)
+        y = random.randrange(0, 8)
+    state[i]['row'] = x
+    state[i]['col'] = y
 
-#Fitness Function
+# Fitness Function
 def fitness(listOfState, numberOfPawns):
-  hasil=[]
-  listConnected=[]
-  for idx,val in enumerate(listOfState):
-    listConnected.append((idx,evaluate(val,numberOfPawns)))
-  listConnected = sorted(listConnected,key=itemgetter(1))
-  for idx,val in listConnected:
-    hasil.append(listOfState[idx])
-  return hasil[:100]
+    hasil = []
+    listConnected = []
+    for idx, val in enumerate(listOfState):
+        listConnected.append((idx, evaluate(val, numberOfPawns)))
+    listConnected = sorted(listConnected, key=itemgetter(1))
+    for idx, val in listConnected:
+        hasil.append(listOfState[idx])
+    return hasil[:100]
+
+#Metode penyelesaian menggunakan genetic algorithm
+def geneticAlgorithm(pop_size,gen_amount,numberOfPawns):
+    Population = createListOfPawns(dataSplitted,numberOfPawns,pop_size)
+    for x in range(0,gen_amount):
+        #Population = fitness(Population,numberOfPawns)
+        Population = crossOver(Population)
+        Population = mutation(Population)
+        for x in Population:
+            if(evaluate(x,numberOfPawns)==0):
+                return x
+
+# Menu
+def menuInit(pawns, numberOfPawns):
+  fileName = 'input.txt'#input('Enter file name : ')
+  dataSplitted=[]
+  readFile(fileName, dataSplitted)
+  pawns=parsePawns(dataSplitted,numberOfPawns)
+  print("Pawns Data : ")
+  printAllPawns(pawns)
+  print("Board First Condition : ")
+  printBoard(pawns)
+  print("Choose Algorithm By Input The Number :")
+  print("1. Hill Climbing")
+  print("2. Simulted Annealing")
+  print("3. Genetic Algorithm")
+  chosenAlgo = int(input("Choose : "))
+  while (chosenAlgo > 3 or chosenAlgo < 1):
+    print("Chose The Correct Number Please...")
+    chosenAlgo = int(input("Choose : "))
+  if (chosenAlgo == 1):
+    hasil = hillClimbing(pawns,numberOfPawns)
+  elif (chosenAlgo == 2):
+    temperature = int(input('Temperature: '))
+    decreaseRate = int(input('Decrease Rate: '))
+    iteration = int(input('Maximum Iteration: '))
+    hasil = simulatedAnnealing(pawns,numberOfPawns,temperature,decreaseRate,iteration)
+  elif (chosenAlgo == 3):
+    popSize = int(input('Population size: '))
+    genAmount = int(input('For how many generations: '))
+    hasil = geneticAlgorithm(popSize,genAmount,numberOfPawns)
+    print("TEST")
+  printBoard(hasil)
+  print(evaluate(hasil,numberOfPawns))
 
 pawns=[]
 numberOfPawns = {}
