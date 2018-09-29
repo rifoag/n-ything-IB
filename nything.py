@@ -269,14 +269,14 @@ def fitness(listOfState, numberOfPawns):
 def geneticAlgorithm(popSize,gen_amount,dataSplitted,numberOfPawns):
     Population = createListOfPawns(dataSplitted,numberOfPawns,popSize)
     if (popSize > 1):
-      for x in range(0,gen_amount):
+        for x in range(0,gen_amount):
           #Population = fitness(Population,numberOfPawns)
           crossOver(popSize, Population)
-          print(Population)
+          mutation(Population,50)
           for y in Population:
               if(evaluate(y,numberOfPawns)==0):
                   return y
-      return Population[0]
+        return Population[0]
     else:
       return Population
 
