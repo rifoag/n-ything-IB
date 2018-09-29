@@ -226,25 +226,25 @@ def createListOfPawns(dataSplitted,numberOfPawns,JumlahPawns):
   return listOfPawns
 
 # crossover setengah dari anak
-def crossOver(Population):
-    #iteration here
-    anak1 = []
-    anak2 = []
-    crossIteration = len(Population[0])/2
-    if (len(Population[0]) % 2 == 0):
-        anak1.append(Population[0][0:int(len(Population[0])/2)])
-        anak1.append(Population[1][int(len(Population[0]) / 2 + 1):len(Population[1])])
-        anak2.append(Population[0][0:int(len(Population[0]) / 2)])
-        anak2.append(Population[1][int(len(Population[0]) / 2 + 1):len(Population[1])])
-    else:
-        anak1.append(Population[0][0:int(len(Population[0]) / 2)])
-        anak1.append(Population[1][int(len(Population[0]) / 2 + 2):len(Population[1])])
-        anak2.append(Population[0][0:int(len(Population[0]) / 2)])
-        anak2.append(Population[1][int(len(Population[0]) / 2 + 2):len(Population[1])])
-    Population[0] = anak1
-    Population[1] = anak2
-    ####################
-
+<<<<<<< HEAD
+def crossOver(popSize, Population):
+    for n in range(int(popSize/2)):
+      anak1 = []
+      anak2 = []
+      if (len(Population[0]) % 2 == 0):
+          anak1.append(Population[n][0:int(len(Population[0])/2)])
+          anak1.append(Population[n+1][int(len(Population[0]) / 2 + 1):len(Population[n])])
+          anak2.append(Population[n][0:int(len(Population[0]) / 2)])
+          anak2.append(Population[n+1][int(len(Population[0]) / 2 + 1):len(Population[n])])
+      else:
+          anak1.append(Population[n][0:int(len(Population[0]) / 2)])
+          anak1.append(Population[n+1][int(len(Population[0]) / 2 + 2):len(Population[n])])
+          anak2.append(Population[n][0:int(len(Population[0]) / 2)])
+          anak2.append(Population[n+1][int(len(Population[0]) / 2 + 2):len(Population[n])])
+      Population[n] = anak1
+      Population[n+1] = anak2
+    
+>>>>>>> 623de3ee532c086b8e234cbe209cedeeb2115068
 # Mengganti posisi pion secara random ke posisi random
 def mutation(Population, mutationFactor):
     for i in range(0,len(Population)):
@@ -270,16 +270,21 @@ def fitness(listOfState, numberOfPawns):
     return hasil[0]
 
 #Metode penyelesaian menggunakan genetic algorithm
-def geneticAlgorithm(pop_size,gen_amount,dataSplitted,numberOfPawns):
-    Population = createListOfPawns(dataSplitted,numberOfPawns,pop_size)
-    for x in range(0,gen_amount):
-        #Population = fitness(Population,numberOfPawns)
-        #crossOver(Population)
-        mutation(Population,50)
-        for y in Population:
-            if(evaluate(y,numberOfPawns)==0):
-                return y
-    return Population[0]
+<<<<<<< HEAD
+def geneticAlgorithm(popSize,gen_amount,dataSplitted,numberOfPawns):
+    Population = createListOfPawns(dataSplitted,numberOfPawns,popSize)
+    if (popSize > 1):
+      for x in range(0,gen_amount):
+          Population = fitness(Population,numberOfPawns)
+          crossOver(popSize, Population)
+          print(Population)
+          for y in Population:
+              print(y)
+              if(evaluate(y,numberOfPawns)==0):
+                  return y
+    else:
+      return Population
+>>>>>>> 623de3ee532c086b8e234cbe209cedeeb2115068
 
 # Menu
 def menuInit(pawns, numberOfPawns):
