@@ -271,8 +271,8 @@ def geneticAlgorithm(pop_size,gen_amount,dataSplitted,numberOfPawns):
     print(Population)
     for x in range(0,gen_amount):
         Population = fitness(Population,numberOfPawns)
+        crossOver(Population)
         mutation(Population,50)
-        Population = crossOver(Population)
         for x in Population:
             if(evaluate(x,numberOfPawns)==0):
                 return x
