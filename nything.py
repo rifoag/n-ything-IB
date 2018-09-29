@@ -273,7 +273,7 @@ def geneticAlgorithm(popSize,gen_amount,dataSplitted,numberOfPawns):
     if (popSize > 1):
         for x in range(0,gen_amount):
           #Population = fitness(Population,numberOfPawns)
-          #crossOver(popSize, Population)
+          crossOver(popSize, Population)
           mutation(Population,50)
           for y in Population:
               if(evaluate(y,numberOfPawns)==0):
