@@ -227,21 +227,19 @@ def createListOfPawns(dataSplitted,numberOfPawns,JumlahPawns):
 
 # crossover setengah dari anak
 def crossOver(popSize, Population):
-    for n in range(int(popSize/2)):
-      anak1 = []
-      anak2 = []
-      if (len(Population[0]) % 2 == 0):
-          anak1.append(Population[n][0:int(len(Population[0])/2)])
-          anak1.append(Population[n+1][int(len(Population[0]) / 2 + 1):len(Population[n])])
-          anak2.append(Population[n][0:int(len(Population[0]) / 2)])
-          anak2.append(Population[n+1][int(len(Population[0]) / 2 + 1):len(Population[n])])
-      else:
-          anak1.append(Population[n][0:int(len(Population[0]) / 2)])
-          anak1.append(Population[n+1][int(len(Population[0]) / 2 + 2):len(Population[n])])
-          anak2.append(Population[n][0:int(len(Population[0]) / 2)])
-          anak2.append(Population[n+1][int(len(Population[0]) / 2 + 2):len(Population[n])])
-      Population[n] = anak1
-      Population[n+1] = anak2
+    for n in range(int(popSize)):
+      if ((n % 2) == 0) and (n < popSize-1):
+        anak1 = []
+        anak2 = []
+        print(n)
+        if (len(Population[0]) % 2 == 0):
+            anak1 = (Population[n][0:int(len(Population[n])/2)]) + (Population[n+1][int(len(Population[0]) / 2 + 1):len(Population[n])])
+            anak2 = (Population[n+1][0:int(len(Population[n]) / 2)]) + (Population[n][int(len(Population[0]) / 2 + 1):len(Population[n])])
+        else:
+            anak1 = (Population[n][0:int(len(Population[n])/2)]) + (Population[n+1][int(len(Population[0]) / 2 + 2):len(Population[n])])
+            anak2 = (Population[n+1][0:int(len(Population[n]) / 2)]) + (Population[n][int(len(Population[0]) / 2 + 2):len(Population[n])])
+        Population[n] = anak1
+        Population[n+1] = anak2
 
 # Mengganti posisi pion secara random ke posisi random
 def mutation(Population, mutationFactor):
@@ -272,13 +270,13 @@ def geneticAlgorithm(popSize,gen_amount,dataSplitted,numberOfPawns):
     Population = createListOfPawns(dataSplitted,numberOfPawns,popSize)
     if (popSize > 1):
       for x in range(0,gen_amount):
-          Population = fitness(Population,numberOfPawns)
+          #Population = fitness(Population,numberOfPawns)
           crossOver(popSize, Population)
           print(Population)
           for y in Population:
-              print(y)
               if(evaluate(y,numberOfPawns)==0):
                   return y
+      return Population[0]
     else:
       return Population
 
@@ -292,6 +290,7 @@ def menuInit(pawns, numberOfPawns):
   printAllPawns(pawns)
   print("Board First Condition : ")
   printBoard(pawns)
+  print(evaluate(pawns, numberOfPawns))
   print("Choose Algorithm By Input The Number :")
   print("1. Hill Climbing")
   print("2. Simulted Annealing")
