@@ -242,15 +242,17 @@ def crossOver(Population):
     Population[0] = anak1
     Population[1] = anak2
 # Mengganti posisi pion secara random ke posisi random
-def mutation(state):
-    i = random.randrange(0, len(state))
-    x = random.randrange(0, 8)
-    y = random.randrange(0, 8)
-    while not notOccupied(state, x, y):
-        x = random.randrange(0, 8)
-        y = random.randrange(0, 8)
-    state[i]['row'] = x
-    state[i]['col'] = y
+def mutation(Population, mutationFactor):
+    for i in range(0,len(Population)):
+        if(decision(mutationFactor)):
+            j = random.randrange(0, len(Population[i]))
+            x = random.randrange(0, 8)
+            y = random.randrange(0, 8)
+            while not notOccupied(Population[i], x, y):
+                x = random.randrange(0, 8)
+                y = random.randrange(0, 8)
+            Population[i][j]['row'] = x
+            Population[i][j]['col'] = y
 
 # Fitness Function
 def fitness(listOfState, numberOfPawns):
@@ -266,10 +268,11 @@ def fitness(listOfState, numberOfPawns):
 #Metode penyelesaian menggunakan genetic algorithm
 def geneticAlgorithm(pop_size,gen_amount,dataSplitted,numberOfPawns):
     Population = createListOfPawns(dataSplitted,numberOfPawns,pop_size)
+    print(Population)
     for x in range(0,gen_amount):
-        #Population = fitness(Population,numberOfPawns)
-        crossOver(Population)
-        mutation(Population)
+        Population = fitness(Population,numberOfPawns)
+        mutation(Population,50)
+        Population = crossOver(Population)
         for x in Population:
             if(evaluate(x,numberOfPawns)==0):
                 return x
