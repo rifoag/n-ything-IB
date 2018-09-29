@@ -227,20 +227,25 @@ def createListOfPawns(dataSplitted,numberOfPawns,JumlahPawns):
 
 # crossover setengah dari anak
 def crossOver(Population):
+    #iteration here
     anak1 = []
     anak2 = []
+    crossIteration = len(Population[0])/2
+    print(crossIteration)
     if (len(Population[0]) % 2 == 0):
-        anak1.append(Population[0][0:(len(Population[0]) / 2)])
-        anak1.append(Population[1][(len(Population[0]) / 2 + 1):len(Population[1])])
-        anak2.append(Population[0][0:(len(Population[0]) / 2)])
-        anak2.append(Population[1][(len(Population[0]) / 2 + 1):len(Population[1])])
+        anak1.append(Population[0][0:int(len(Population[0])/2)])
+        anak1.append(Population[1][int(len(Population[0]) / 2 + 1):len(Population[1])])
+        anak2.append(Population[0][0:int(len(Population[0]) / 2)])
+        anak2.append(Population[1][int(len(Population[0]) / 2 + 1):len(Population[1])])
     else:
-        anak1.append(Population[0][0:(len(Population[0]) / 2) + 1])
-        anak1.append(Population[1][(len(Population[0]) / 2 + 2):len(Population[1])])
-        anak2.append(Population[0][0:(len(Population[0]) / 2) + 1])
-        anak2.append(Population[1][(len(Population[0]) / 2 + 2):len(Population[1])])
+        anak1.append(Population[0][0:int(len(Population[0]) / 2)])
+        anak1.append(Population[1][int(len(Population[0]) / 2 + 2):len(Population[1])])
+        anak2.append(Population[0][0:int(len(Population[0]) / 2)])
+        anak2.append(Population[1][int(len(Population[0]) / 2 + 2):len(Population[1])])
     Population[0] = anak1
     Population[1] = anak2
+    ####################
+    
 # Mengganti posisi pion secara random ke posisi random
 def mutation(Population, mutationFactor):
     for i in range(0,len(Population)):
@@ -273,9 +278,9 @@ def geneticAlgorithm(pop_size,gen_amount,dataSplitted,numberOfPawns):
         Population = fitness(Population,numberOfPawns)
         crossOver(Population)
         mutation(Population,50)
-        for x in Population:
-            if(evaluate(x,numberOfPawns)==0):
-                return x
+        for y in Population:
+            if(evaluate(y,numberOfPawns)==0):
+                return y
 
 # Menu
 def menuInit(pawns, numberOfPawns):
