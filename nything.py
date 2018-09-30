@@ -45,15 +45,25 @@ def menuInit(pawns, numberOfPawns):
     chosenAlgo = int(input("Choose : "))
   if (chosenAlgo == 1):
     hasil = hillClimbing(pawns,numberOfPawns)
+    print(hasil)
+    print(evaluate(hasil,numberOfPawns))
   elif (chosenAlgo == 2):
     temperature = int(input('Temperature: '))
     decreaseRate = int(input('Decrease Rate: '))
     iteration = int(input('Maximum Iteration: '))
-    hasil = simulatedAnnealing(pawns,numberOfPawns,temperature,decreaseRate,iteration)
+    hasil = simulatedAnnealing2(pawns,numberOfPawns,temperature,decreaseRate,iteration)
+    print(hasil)
+    print(evaluate(hasil,numberOfPawns))
   elif (chosenAlgo == 3):
-    print("Genetic Algorithm Should Run Here!")
-  printBoard(hasil)
-  print(evaluate(hasil,numberOfPawns))
+    jumlahPopulasi= int(input('Sum Of Population: '))
+    limit = int(input('Maximum generation: '))
+    listOfPawns = createListOfPawns(dataSplitted,numberOfPawns,jumlahPopulasi)
+    hasil = geneticAlgoritm(listOfPawns,numberOfPawns,jumlahPopulasi,limit)
+    print(len(hasil))
+    for state in hasil:
+      print("state: ")
+      print(state)
+      print(evaluate(state,numberOfPawns))
 
 # Create pawns' data to dictionary
 def createPawn(datapawn, pawns, listPoint, numberOfPawns):
@@ -244,7 +254,7 @@ def simulatedAnnealing(initState,numberOfPawns,temperature,decreaseRate,iteratio
         i+=1
         temperature *= decreaseRate/100.00
         isOver = False
-      else:
+      elif(temperature!=0):
         probability = int(exp(evaluate(neighbour,numberOfPawns)-evalCurrent/temperature))
         if (decision(probability)):
           current = neighbour
@@ -254,26 +264,60 @@ def simulatedAnnealing(initState,numberOfPawns,temperature,decreaseRate,iteratio
           isOver = False
   return current
 
+def simulatedAnnealing2(initState,numberOfPawns,temperature,decreaseRate,iteration):
+  current = initState
+  evalCurrent = evaluate(current,numberOfPawns)
+  i = 0
+  while (evalCurrent != 0 and i < iteration):
+    neighbour = randomMove(current)
+    if (evalCurrent > evaluate(neighbour,numberOfPawns)):
+      current = neighbour
+      evalCurrent = evaluate(current,numberOfPawns)
+      temperature *= decreaseRate/100.00
+    elif(temperature!=0):
+      probability = int(exp(evaluate(neighbour,numberOfPawns)-evalCurrent/temperature))
+      if (decision(probability)):
+        current = neighbour
+        evalCurrent = evaluate(current,numberOfPawns)
+        temperature *= decreaseRate/100
+    i+=1
+  return current
 
 #Metode penyelesaian menggunakan genetic algorithm
-# def geneticAlgoritm(populasi,numberOfPawns,limit):
-
+def geneticAlgoritm(listOfPawns,numberOfPawns,jumlahPopulasi,limit):
+  listOfPawns = fitness(listOfPawns,numberOfPawns,jumlahPopulasi)
+  i = 0
+  while ( (evaluate(listOfPawns[0],numberOfPawns) != 0) and i < limit):
+    jumlahCrossOver = int(len(listOfPawns)/2)
+    for j in range (0,jumlahCrossOver):
+      anakAnak = crossOver(listOfPawns[2*j],listOfPawns[2+j+1])
+      for anak in anakAnak:
+        mutation(anak)
+        listOfPawns.append(anak)
+    listOfPawns = fitness(listOfPawns,numberOfPawns,jumlahPopulasi)
+    i+=1
+  return listOfPawns
   
 # crossover setengah dari anak
 def crossOver(state1, state2):
-  anakAnak = []
-  anak1 = []
-  anak2 = []
+  # anakAnak = []
+  # anak1 = []
+  # anak2 = []
   if (len(state1) % 2 == 0):
-    anak1.append(state1[0:(len(state1)/2)])
-    anak1.append(state2[(len(state1)/2 + 1):len(state2)])
-    anak2.append(state2[0:(len(state1)/2)])
-    anak2.append(state1[(len(state1)/2 + 1):len(state2)])
+    # anak1.append(state1[0:int(len(state1)/2)])
+    # anak1.append(state2[(int(len(state1)/2) + 1):len(state2)])
+    # anak2.append(state2[0:int(len(state1)/2)])
+    # anak2.append(state1[(int(len(state1)/2) + 1):len(state2)])
+    anak1 = state1[0:int(len(state1)/2)] + state2[int(len(state1)/2):len(state2)]
+    anak2 = state2[0:int(len(state1)/2)] + state1[int(len(state1)/2):len(state2)]
+
   else:
-    anak1.append(state1[0:(len(state1)/2)+1])
-    anak1.append(state2[(len(state1)/2 + 2):len(state2)])
-    anak2.append(state2[0:(len(state1)/2)+1])
-    anak2.append(state1[(len(state1)/2 + 2):len(state2)])
+    # anak1.append(state1[0:(int(len(state1)/2)+1)])
+    # anak1.append(state2[(int(len(state1)/2) + 2):len(state2)])
+    # anak2.append(state2[0:(int(len(state1)/2)+1)])
+    # anak2.append(state1[(int(len(state1)/2) + 2):len(state2)])
+    anak1 = state1[0:(int(len(state1)/2)+1)] + state2[(int(len(state1)/2) + 1):len(state2)]
+    anak2 = state2[0:(int(len(state1)/2)+1)] + state1[(int(len(state1)/2) + 1):len(state2)]
   anakAnak = [anak1, anak2]
   return anakAnak
 
@@ -289,7 +333,7 @@ def mutation(state):
   state[i]['col'] = y
 
 #Fitness Function
-def fitness(listOfState, numberOfPawns):
+def fitness(listOfState, numberOfPawns, jumlahPopulasi):
   hasil=[]
   listConnected=[]
   for idx,val in enumerate(listOfState):
@@ -297,21 +341,33 @@ def fitness(listOfState, numberOfPawns):
   listConnected = sorted(listConnected,key=itemgetter(1))
   for idx,val in listConnected:
     hasil.append(listOfState[idx])
-  return hasil[:100]
+  hasil = removeDuplicate(hasil)
+  return hasil[:jumlahPopulasi]
+
+# remove Duplicate list
+def removeDuplicate(listState):
+  hasil = []
+  for value in listState:
+    if value not in hasil:
+      hasil.append(value)
+  return hasil
+
+# random move
+def randomMove(state):
+  neighbour = state
+  i = random.randrange(0,len(state))
+  x = random.randrange(0,8)
+  y = random.randrange(0,8)
+  while not notOccupied(state,x,y):
+    x = random.randrange(0,8)
+    y = random.randrange(0,8)
+  neighbour[i]['row'] = x
+  neighbour[i]['col'] = y
+  return neighbour 
 
 pawns=[]
 numberOfPawns = {}
 numberOfPawns['WHITE'] = 0
 numberOfPawns['BLACK'] = 0
-# fitness([pawns_1,pawns_2],numberOfPawns)
-# printAllPawns(pawns)
-# printBoard(pawns)
+dataSplitted = []
 menuInit(pawns,numberOfPawns)
-# print(evaluate(pawns, numberOfPawns))
-# allNeighbour = listAllNeighbour(pawns)
-# result = hillClimbing(pawns, numberOfPawns)
-# printBoard(result)
-# print(evaluate(result, numberOfPawns))
-# hasil = simulatedAnnealing(pawns,100,80,1000)
-# printBoard(hasil)
-# print(evaluate(hasil))
