@@ -270,7 +270,8 @@ def geneticAlgoritm(listOfstate,pawnAmountBW,jumlahPopulasi,limit):
     for j in range (0,jumlahCrossOver):
       anakAnak = crossOver(listOfstate[2*j],listOfstate[2*j+1])
       for anak in anakAnak:
-        mutation(anak)
+        if (decision(2)):
+          mutation(anak)
         listOfstate.append(anak)
     listOfstate = fitness(listOfstate,pawnAmountBW,jumlahPopulasi)
     i+=1
