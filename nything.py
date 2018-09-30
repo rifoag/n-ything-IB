@@ -94,24 +94,24 @@ def printBoard(state):
           isPawnExist = True
           if (pawn['color'] == 'BLACK'):
             if (pawn['type']=='QUEEN'):
-              print('Q',end="")
+              print('Q    ',end="")
             elif (pawn['type']=='BISHOP'):
-              print('B',end="")
+              print('B    ',end="")
             elif (pawn['type']=='ROOK'):
-              print('R',end="")
+              print('R    ',end="")
             elif (pawn['type']=='KNIGHT'):
-              print('K',end="")
+              print('K    ',end="")
           else:
             if (pawn['type']=='QUEEN'):
-              print('q',end="")
+              print('q    ',end="")
             elif (pawn['type']=='BISHOP'):
-              print('b',end="")
+              print('b    ',end="")
             elif (pawn['type']=='ROOK'):
-              print('r',end="")
+              print('r    ',end="")
             elif (pawn['type']=='KNIGHT'):
-              print('k',end="")
+              print('k    ',end="")
       if (not isPawnExist):
-        print("-",end="")
+        print("-    ",end="")
     print("\n")
 
 # Check whether the current pawn can attack the other pawn
