@@ -15,9 +15,25 @@ def readFile(fileName, dataSplitted):
 def parseState(dataSplitted,pawnAmountBW):
   state=[]
   listPoint=[]
+  pawnAmountBW['WHITE'] = 0
+  pawnAmountBW['BLACK'] = 0
   for row in dataSplitted:
     createPawn(row, state, listPoint, pawnAmountBW) # Parse into desired format
   return state
+
+# Create state' data to dictionary
+def createPawn(dataPawn, state, listPoint, pawnAmountBW):
+  amount = int(dataPawn[2])
+  x = random.randrange(8)
+  y = random.randrange(8)
+
+  for i in range(0,amount):
+    while((x,y) in listPoint):
+      x = random.randrange(8)
+      y = random.randrange(8)
+    listPoint.append((x,y))
+    state.append({'type' : dataPawn[1], 'color' : dataPawn[0], 'row': x, 'col' : y})
+    pawnAmountBW[dataPawn[0]] += 1
 
 # membuat list of state dari data
 def createListOfState(dataSplitted,pawnAmountBW,jumlahState):
@@ -48,33 +64,23 @@ def menuInit():
     print("Chose The Correct Number Please...")
     chosenAlgo = int(input("Choose : "))
   if (chosenAlgo == 1):
-    hasil = hillClimbing(state,pawnAmountBW)
+    result = hillClimbing(state,pawnAmountBW)
   elif (chosenAlgo == 2):
     temperature = int(input('Temperature: '))
     decreaseRate = int(input('Decrease Rate: '))
     iteration = int(input('Maximum Iteration: '))
-    hasil = simulatedAnnealing(state,pawnAmountBW,temperature,decreaseRate,iteration)
+    result = simulatedAnnealing(state,pawnAmountBW,temperature,decreaseRate,iteration)
   elif (chosenAlgo == 3):
     jumlahPopulasi= int(input('Sum Of Population: '))
     limit = int(input('Maximum generation: '))
     listOfstate = createListOfState(dataSplitted,pawnAmountBW,jumlahPopulasi)
-    hasil = geneticAlgoritm(listOfstate,pawnAmountBW,jumlahPopulasi,limit)
-  printBoard(hasil)
-  print(evaluate(hasil,pawnAmountBW))
-
-# Create state' data to dictionary
-def createPawn(dataPawn, state, listPoint, pawnAmountBW):
-  amount = int(dataPawn[2])
-  x = random.randrange(8)
-  y = random.randrange(8)
-
-  for i in range(0,amount):
-    while((x,y) in listPoint):
-      x = random.randrange(8)
-      y = random.randrange(8)
-    listPoint.append((x,y))
-    state.append({'type' : dataPawn[1], 'color' : dataPawn[0], 'row': x, 'col' : y})
-    pawnAmountBW[dataPawn[0]] += 1
+    result = geneticAlgoritm(listOfstate,pawnAmountBW,jumlahPopulasi,limit)
+  attackNum = countAtack(result)
+  # print(evaluate(result,pawnAmountBW))
+  printBoard(result)
+  print(attackNum['friend'], end='')
+  print(' ', end='')
+  print(attackNum['enemy'], end='')
 
 # Print all state data (type, Color, Position)
 def printAllState(state):
@@ -197,6 +203,19 @@ def evaluate(state, pawnAmountBW):
   else:
     return canAttackFriend + (2*pawnAmountBW['BLACK']*pawnAmountBW['WHITE'] - canAttackEnemy)
 
+def countAtack(state):
+  canAttackEnemy = 0
+  canAttackFriend = 0
+  for pawn in state:
+    for dirPawn in state:
+      if checkAttack(pawn, dirPawn, state) and pawn!=dirPawn:
+        if (isEnemy(pawn, dirPawn)):
+          canAttackEnemy += 1
+        else: # the other piece is not an enemy
+          canAttackFriend += 1
+  count = {'friend': canAttackFriend, 'enemy': canAttackEnemy}
+  return count
+
 # check if a cell is not occupied by a pawn
 def notOccupied(state, x, y):
   for pawn in state:
@@ -302,22 +321,22 @@ def mutation(state):
 
 #Fitness Function
 def fitness(listOfState, pawnAmountBW, jumlahPopulasi):
-  hasil=[]
+  result=[]
   listConnected=[]
   for idx,val in enumerate(listOfState):
     listConnected.append((idx,evaluate(val,pawnAmountBW)))
   listConnected = sorted(listConnected,key=itemgetter(1))
   for idx,val in listConnected:
-    hasil.append(listOfState[idx])
-  hasil = removeDuplicate(hasil)
-  return hasil[:jumlahPopulasi]
+    result.append(listOfState[idx])
+  result = removeDuplicate(result)
+  return result[:jumlahPopulasi]
 
 # remove Duplicate list
 def removeDuplicate(listState):
-  hasil = []
+  result = []
   for value in listState:
-    if value not in hasil:
-      hasil.append(value)
-  return hasil
+    if value not in result:
+      result.append(value)
+  return result
 
 menuInit()
