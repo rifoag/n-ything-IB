@@ -290,7 +290,7 @@ def geneticAlgoritm(listOfPawns,numberOfPawns,jumlahPopulasi,limit):
   while ( (evaluate(listOfPawns[0],numberOfPawns) != 0) and i < limit):
     jumlahCrossOver = int(len(listOfPawns)/2)
     for j in range (0,jumlahCrossOver):
-      anakAnak = crossOver(listOfPawns[2*j],listOfPawns[2+j+1])
+      anakAnak = crossOver(listOfPawns[2*j],listOfPawns[2*j+1])
       for anak in anakAnak:
         mutation(anak)
         listOfPawns.append(anak)
