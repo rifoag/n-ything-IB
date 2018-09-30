@@ -234,10 +234,10 @@ def crossOver(popSize, Population):
         print(n)
         if (len(Population[0]) % 2 == 0):
             anak1 = (Population[n][0:int(len(Population[n])/2)]) + (Population[n+1][int(len(Population[0]) / 2 + 1):len(Population[n])])
-            anak2 = (Population[n+1][0:int(len(Population[n]) / 2)]) + (Population[n][int(len(Population[0]) / 2 + 1):len(Population[n])])
+            anak2 = (Population[n+1][0:int(len(Population[n])/2)]) + (Population[n][int(len(Population[0]) / 2 + 1):len(Population[n])])
         else:
             anak1 = (Population[n][0:int(len(Population[n])/2)]) + (Population[n+1][int(len(Population[0]) / 2 + 2):len(Population[n])])
-            anak2 = (Population[n+1][0:int(len(Population[n]) / 2)]) + (Population[n][int(len(Population[0]) / 2 + 2):len(Population[n])])
+            anak2 = (Population[n+1][0:int(len(Population[n])/2)]) + (Population[n][int(len(Population[0]) / 2 + 2):len(Population[n])])
         Population[n] = anak1
         Population[n+1] = anak2
 
@@ -263,15 +263,17 @@ def fitness(listOfState, numberOfPawns):
     listConnected = sorted(listConnected, key=itemgetter(1))
     for idx, val in listConnected:
         hasil.append(listOfState[idx])
-    return hasil[0]
+    return hasil
 
 #Metode penyelesaian menggunakan genetic algorithm
 def geneticAlgorithm(popSize,gen_amount,dataSplitted,numberOfPawns):
     Population = createListOfPawns(dataSplitted,numberOfPawns,popSize)
     if (popSize > 1):
         for x in range(0,gen_amount):
-          #Population = fitness(Population,numberOfPawns)
-          crossOver(popSize, Population)
+          print(Population)
+          Population = fitness(Population,numberOfPawns)
+          print(Population)
+          #crossOver(popSize, Population)
           mutation(Population,50)
           for y in Population:
               if(evaluate(y,numberOfPawns)==0):
